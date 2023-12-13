@@ -1,9 +1,9 @@
 package nl.novi.techiteasy1121.controllers;
 
-import nl.novi.techiteasy1121.Dtos.TelevisionDto;
-import nl.novi.techiteasy1121.Dtos.TelevisionInputDto;
+import nl.novi.techiteasy1121.Dtos.general.IdInputDto;
+import nl.novi.techiteasy1121.Dtos.television.TelevisionDto;
+import nl.novi.techiteasy1121.Dtos.television.TelevisionInputDto;
 import nl.novi.techiteasy1121.services.TelevisionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-
-// @requestmapping kan ook nog
+@RequestMapping("/televisions")
 
 
 public class TelevisionController {
@@ -27,7 +26,7 @@ public class TelevisionController {
     }
 
     // Je ziet dat de return waarde van deze methode nu ResponseEntity<List<TelevisionDto>> is in plaats van <ResponseEntity<List<Television>>
-    @GetMapping("/televisions")
+    @GetMapping
     public ResponseEntity<List<TelevisionDto>> getAllTelevisions(@RequestParam(value = "brand", required = false) Optional<String> brand) {
 
         List<TelevisionDto> dtos;
@@ -48,7 +47,7 @@ public class TelevisionController {
     }
 
     // De return waarde is ook hier een TelevisionDto in plaats van een Television
-    @GetMapping("/televisions/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<TelevisionDto> getTelevision(@PathVariable("id")Long id) {
 
         // We spreken hier ook weer een service methode aan in plaats van direct de repository aan te spreken
@@ -57,11 +56,11 @@ public class TelevisionController {
             return ResponseEntity.ok().body(television);
 
     }
-
+// fddff
     // Ook hier returnen we weer een TelevisionDto, maar ook de parameter is een dto geworden.
     // Het is niet verplicht om een "outputdto" en een "inputdto" te hebben, zeker omdat ze in dit geval hetzelfde zijn,
     // maar we willen jullie laten zien dat het mogelijk is. In sommige gevallen kan het zelfs nodig zijn.
-    @PostMapping("/televisions")
+    @PostMapping
     public ResponseEntity<TelevisionDto> addTelevision(@Valid @RequestBody TelevisionInputDto televisionInputDto) {
 
         // Hier gebruiken we weer een service methode in plaats van direct de repository aan te spreken.
@@ -73,7 +72,7 @@ public class TelevisionController {
 
     // Hier veranderd niks aan de methode. We hebben niet meer de naam van de pathvariabele expliciet genoemd, omdat de
     // parameter-naam overeen komt met de naam van de pathvariabele.
-    @DeleteMapping("/televisions/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteTelevision(@PathVariable Long id) {
 
         // Hier gebruiken we weer een service methode in plaats van direct de repository aan te spreken.
@@ -85,7 +84,7 @@ public class TelevisionController {
 
     // Deze methode returned nu een ResponseEntity<TelevisionDto> in plaats van een ResponseEntity<Television> en deze
     // methode vraagt nu om een Long en een TelevisionInputDto in de parameters in plaats van een Long en een Television.
-    @PutMapping("/televisions/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<TelevisionDto> updateTelevision(@PathVariable Long id, @Valid @RequestBody TelevisionInputDto newTelevision) {
 
         // Hier gebruiken we weer een service methode in plaats van direct de repository aan te spreken.
@@ -93,6 +92,14 @@ public class TelevisionController {
         TelevisionDto dto = televisionService.updateTelevision(id, newTelevision);
 
         return ResponseEntity.ok().body(dto);
+    }
+
+
+    @PutMapping("/{id}/remotecontroller")
+    public ResponseEntity<Object> assignTelevisionToRemoteController(@PathVariable Long id, @RequestBody IdInputDto input) {
+
+        televisionService.assignRemoteControllerToTelevision(id, input.id);
+        return ResponseEntity.noContent().build();
     }
 
 }
