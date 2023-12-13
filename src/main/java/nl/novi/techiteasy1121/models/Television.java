@@ -142,7 +142,7 @@ public class Television {
     //  Alle variable setters
     public void setId(Long id) {
         this.id = id;
-    }
+    } // setter beter er uit halen
 
     public void setType(String type) {
         this.type = type;

@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+
+// @requestmapping kan ook nog
+
+
 public class TelevisionController {
 
     // We importeren hier (via de constructor, maar het mag ook @Autowired zijn) nu de Service in plaats van direct de Repository.
