@@ -1,13 +1,16 @@
 package nl.novi.techiteasy1121.services;
 
-import nl.novi.techiteasy1121.Dtos.TelevisionDto;
-import nl.novi.techiteasy1121.Dtos.TelevisionInputDto;
+import nl.novi.techiteasy1121.Dtos.television.TelevisionDto;
+import nl.novi.techiteasy1121.Dtos.television.TelevisionInputDto;
 import nl.novi.techiteasy1121.exceptions.RecordNotFoundException;
+import nl.novi.techiteasy1121.models.RemoteController;
 import nl.novi.techiteasy1121.models.Television;
+import nl.novi.techiteasy1121.repositories.RemoteControllerRepository;
 import nl.novi.techiteasy1121.repositories.TelevisionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.rmi.Remote;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,9 +22,11 @@ public class TelevisionService {
     // We importeren de repository nu in de service in plaats van in de controller.
     // dit mag met constructor injection of autowire.
     private final TelevisionRepository televisionRepository;
+    private final RemoteControllerRepository remoteControllerRepository;
 
-    public TelevisionService(TelevisionRepository televisionRepository){
+    public TelevisionService(TelevisionRepository televisionRepository, RemoteControllerRepository remoteControllerRepository){
         this.televisionRepository = televisionRepository;
+        this.remoteControllerRepository = remoteControllerRepository;
     }
 
     // Vanuit de repository kunnen we een lijst van Televisions krijgen, maar de communicatie container tussen Service en
@@ -92,23 +97,22 @@ public class TelevisionService {
             Television television1 = televisionOptional.get();
 
 
-            television1.setAmbiLight(newTelevision.getAmbiLight());
-            television1.setAvailableSize(newTelevision.getAvailableSize());
-            television1.setAmbiLight(newTelevision.getAmbiLight());
-            television1.setBluetooth(newTelevision.getBluetooth());
-            television1.setBrand(newTelevision.getBrand());
-            television1.setHdr(newTelevision.getHdr());
-            television1.setName(newTelevision.getName());
-            television1.setOriginalStock(newTelevision.getOriginalStock());
-            television1.setPrice(newTelevision.getPrice());
-            television1.setRefreshRate(newTelevision.getRefreshRate());
-            television1.setScreenQuality(newTelevision.getScreenQuality());
-            television1.setScreenType(newTelevision.getScreenType());
-            television1.setSmartTv(newTelevision.getSmartTv());
-            television1.setSold(newTelevision.getSold());
-            television1.setType(newTelevision.getType());
-            television1.setVoiceControl(newTelevision.getVoiceControl());
-            television1.setWifi(newTelevision.getWifi());
+            television1.setAmbiLight(newTelevision.ambiLight);
+            television1.setAvailableSize(newTelevision.availableSize);
+            television1.setBluetooth(newTelevision.bluetooth);
+            television1.setBrand(newTelevision.brand);
+            television1.setHdr(newTelevision.hdr);
+            television1.setName(newTelevision.name);
+            television1.setOriginalStock(newTelevision.originalStock);
+            television1.setPrice(newTelevision.price);
+            television1.setRefreshRate(newTelevision.refreshRate);
+            television1.setScreenQuality(newTelevision.screenQuality);
+            television1.setScreenType(newTelevision.screenType);
+            television1.setSmartTv(newTelevision.smartTv);
+            television1.setSold(newTelevision.sold);
+            television1.setType(newTelevision.type);
+            television1.setVoiceControl(newTelevision.voiceControl);
+            television1.setWifi(newTelevision.wifi);
             Television returnTelevision = televisionRepository.save(television1);
 
             return transferToDto(returnTelevision);
@@ -125,22 +129,22 @@ public class TelevisionService {
     public Television transferToTelevision(TelevisionInputDto dto){
         var television = new Television();
 
-        television.setType(dto.getType());
-        television.setBrand(dto.getBrand());
-        television.setName(dto.getName());
-        television.setPrice(dto.getPrice());
-        television.setAvailableSize(dto.getAvailableSize());
-        television.setRefreshRate(dto.getRefreshRate());
-        television.setScreenType(dto.getScreenType());
-        television.setScreenQuality(dto.getScreenQuality());
-        television.setSmartTv(dto.getSmartTv());
-        television.setWifi(dto.getWifi());
-        television.setVoiceControl(dto.getVoiceControl());
-        television.setHdr(dto.getHdr());
-        television.setBluetooth(dto.getBluetooth());
-        television.setAmbiLight(dto.getAmbiLight());
-        television.setOriginalStock(dto.getOriginalStock());
-        television.setSold(dto.getSold());
+        television.setType(dto.type);
+        television.setBrand(dto.brand);
+        television.setName(dto.name);
+        television.setPrice(dto.price);
+        television.setAvailableSize(dto.availableSize);
+        television.setRefreshRate(dto.refreshRate);
+        television.setScreenType(dto.screenType);
+        television.setScreenQuality(dto.screenQuality);
+        television.setSmartTv(dto.smartTv);
+        television.setWifi(dto.wifi);
+        television.setVoiceControl(dto.voiceControl);
+        television.setHdr(dto.hdr);
+        television.setBluetooth(dto.bluetooth);
+        television.setAmbiLight(dto.ambiLight);
+        television.setOriginalStock(dto.originalStock);
+        television.setSold(dto.sold);
 
         return television;
     }
@@ -149,24 +153,42 @@ public class TelevisionService {
     public TelevisionDto transferToDto(Television television){
         TelevisionDto dto = new TelevisionDto();
 
-        dto.setId(television.getId());
-        dto.setType(television.getType());
-        dto.setBrand(television.getBrand());
-        dto.setName(television.getName());
-        dto.setPrice(television.getPrice());
-        dto.setAvailableSize(television.getAvailableSize());
-        dto.setRefreshRate(television.getRefreshRate());
-        dto.setScreenType(television.getScreenType());
-        dto.setScreenQuality(television.getScreenQuality());
-        dto.setSmartTv(television.getWifi());
-        dto.setWifi(television.getWifi());
-        dto.setVoiceControl(television.getVoiceControl());
-        dto.setHdr(television.getHdr());
-        dto.setBluetooth(television.getBluetooth());
-        dto.setAmbiLight(television.getAmbiLight());
-        dto.setOriginalStock(television.getOriginalStock());
-        dto.setSold(television.getSold());
+        dto.id = television.getId();
+        dto.type = television.getType();
+        dto.brand = television.getBrand();
+        dto.name = television.getName();
+        dto.price = television.getPrice();
+        dto.availableSize = television.getAvailableSize();
+        dto.refreshRate = television.getRefreshRate();
+        dto.screenType = television.getScreenType();
+        dto.screenQuality = television.getScreenQuality();
+        dto.smartTv = television.getWifi();
+        dto.wifi = television.getWifi();
+        dto.voiceControl = television.getVoiceControl();
+        dto.hdr = television.getHdr();
+        dto.bluetooth = television.getBluetooth();
+        dto.ambiLight = television.getAmbiLight();
+        dto.originalStock = television.getOriginalStock();
+        dto.sold = television.getSold();
 
         return dto;
     }
+
+    public void assignRemoteControllerToTelevision(Long id, Long remoteControllerId) {
+        Optional<Television> optionalTelevision = televisionRepository.findById(id);
+        Optional<RemoteController> optionalRemoteController = remoteControllerRepository.findById(remoteControllerId);
+
+        if(optionalTelevision.isPresent() && optionalRemoteController.isPresent()) {
+            Television television = optionalTelevision.get();
+
+            television.setRemoteController(optionalRemoteController.get());
+            televisionRepository.save(television);
+        } else {
+            throw new RecordNotFoundException();
+        }
+    }
+
+
+
 }
+
