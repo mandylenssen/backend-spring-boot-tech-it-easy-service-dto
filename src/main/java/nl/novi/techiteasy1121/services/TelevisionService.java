@@ -10,6 +10,7 @@ import nl.novi.techiteasy1121.repositories.TelevisionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.rmi.Remote;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -174,11 +175,11 @@ public class TelevisionService {
     }
 
     public void assignRemoteControllerToTelevision(Long id, Long remoteControllerId) {
-        var optionalTelevision = televisionRepository.findById(id);
-        var optionalRemoteController = remoteControllerRepository.findById(remoteControllerId);
+        Optional<Television> optionalTelevision = televisionRepository.findById(id);
+        Optional<RemoteController> optionalRemoteController = remoteControllerRepository.findById(remoteControllerId);
 
         if(optionalTelevision.isPresent() && optionalRemoteController.isPresent()) {
-            var television = optionalTelevision.get();
+            Television television = optionalTelevision.get();
 
             television.setRemoteController(optionalRemoteController.get());
             televisionRepository.save(television);

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import nl.novi.techiteasy1121.controllers.TelevisionController;
 
 @Entity
-@Table(name = "RemoteController")
+@Table(name = "remotecontroller")
 public class RemoteController {
 
     @Id

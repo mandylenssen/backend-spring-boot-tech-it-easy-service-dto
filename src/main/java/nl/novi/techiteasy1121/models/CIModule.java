@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Ci-Module")
+@Table(name = "cimodule")
 public class CIModule {
 
     @Id
